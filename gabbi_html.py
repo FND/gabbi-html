@@ -1,9 +1,36 @@
+import re
+
+import gabbi.case
+
 from lxml import html
 from gabbi.handlers import ResponseHandler
 
 
 def gabbi_response_handlers():
     return [HTMLResponseHandler]
+
+
+def replace_response_html(self, message):
+    """
+    replaces a CSS selector with the corresponding value from the previous request
+    """
+
+    def _css_replacer(match):
+        selector = match.group("arg")
+
+        doc = html.fromstring(self.prior.output)
+        nodes = doc.cssselect(selector)
+        assert len(nodes) == 1 # TODO: proper error message
+
+        return nodes[0].text # XXX: too simplistic
+
+    regex = re.compile(self._replacer_regex("RESPONSE_HTML")) # TODO: precalculate once
+    return regex.sub(_css_replacer, message)
+
+
+# monkey-patch gabbi to include custom replacer
+gabbi.case.REPLACERS += ["RESPONSE_HTML"]
+gabbi.case.HTTPTestCase._response_html_replace = replace_response_html
 
 
 class HTMLResponseHandler(ResponseHandler):
