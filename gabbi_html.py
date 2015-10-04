@@ -6,6 +6,9 @@ from lxml import html
 from gabbi.handlers import ResponseHandler
 
 
+REGEX = re.compile(gabbi.case.HTTPTestCase._replacer_regex("RESPONSE_HTML"))
+
+
 def gabbi_response_handlers():
     return [HTMLResponseHandler]
 
@@ -24,8 +27,7 @@ def replace_response_html(self, message):
 
         return nodes[0].text # XXX: too simplistic
 
-    regex = re.compile(self._replacer_regex("RESPONSE_HTML")) # TODO: precalculate once
-    return regex.sub(_css_replacer, message)
+    return REGEX.sub(_css_replacer, message)
 
 
 # monkey-patch gabbi to include custom replacer
