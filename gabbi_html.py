@@ -23,7 +23,11 @@ def replace_response_html(self, message):
 
         doc = html.fromstring(self.prior.output)
         nodes = doc.cssselect(selector)
-        assert len(nodes) == 1 # TODO: proper error message
+        node_count = len(nodes)
+        if node_count == 0:
+            raise ValueError("no matching elements for '%s'" % selector)
+        elif node_count > 1:
+            raise ValueError("more than one matching element for '%s'" % selector)
 
         return nodes[0].text # XXX: too simplistic
 
