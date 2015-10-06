@@ -1,9 +1,12 @@
+from gabbi_html import __version__ as VERSION
+
+
 META = {
     "name": "gabbi-html",
-    "version": "0.1.1", # TODO: move into package
+    "version": VERSION,
     "url": "https://github.com/FND/gabbi-html",
     "author": "FND",
-    "py_modules": ["gabbi_html"],
+    "packages": ["gabbi_html"],
     "install_requires": ["gabbi", "lxml", "cssselect"],
     "extras_require": {
         "linting": ["pep8"]
