@@ -21,7 +21,7 @@ class HTMLResponseHandler(ResponseHandler):
         selector, attribute = _parse_selector(item)
         nodes = self.doc.cssselect(selector)
         node_count = len(nodes)
-        if count:
+        if count is not None:
             test.assertEqual(node_count, count,
                     "expected %d matching elements, found %d" % (count, node_count))
             if attribute: # XXX: this is the same as using an attribute selector!?
