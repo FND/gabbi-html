@@ -23,20 +23,24 @@ class HTMLResponseHandler(ResponseHandler):
         node_count = len(nodes)
         if count is not None:
             test.assertEqual(node_count, count,
-                    "expected %d matching elements, found %d" % (count, node_count))
+                    "expected %d elements matching '%s', found %d" % (count,
+                            selector, node_count))
             if attribute: # XXX: this is the same as using an attribute selector!?
                 for i, node in enumerate(nodes):
                     test.assertTrue(attribute in node.attrib,
-                            "missing attribute '%s' on element #%d" %
-                                    (attribute, i + 1))
+                            "missing attribute '%s' on element #%d matching '%s'" %
+                                    (attribute, i + 1, selector))
         else:
+            test.assertNotEqual(node_count, 0, "no element matching '%s'" % selector)
             test.assertEqual(node_count, 1,
-                    "content checks must not target more than a single element")
+                    "'%s' content check must not target more than a single element" %
+                            selector)
             node = nodes[0]
             if attribute:
                 actual = node.attrib[attribute]
                 test.assertEqual(actual, value,
-                        "unexpected value for attribute '%s'" % attribute)
+                        "unexpected value for attribute '%s' on element matching '%s'" %
+                                (attribute, selector))
             else:
                 actual = node.text.strip()
                 test.assertEqual(actual, value, "unexpected text value")
